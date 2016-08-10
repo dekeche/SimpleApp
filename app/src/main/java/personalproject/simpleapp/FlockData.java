@@ -18,7 +18,7 @@ public class FlockData {
         AWeight = 1.0f;
         ARange = 50;
         CWeight = 1.0f;
-        CRange = 50;
+        CRange = 100;
         SWeight = 1.5f;
         SRange = 50;
     }

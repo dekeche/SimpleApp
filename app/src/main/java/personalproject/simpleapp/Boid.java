@@ -49,7 +49,7 @@ public class Boid {
 
         applyForce(sep);
         //applyForce(ali);
-        //applyForce(coh);
+        applyForce(coh);
     }
 
 
@@ -124,31 +124,41 @@ public class Boid {
             double d = location.distWrap(other.location,borderH,borderW);
             if(d > 0 && d < data.getCRange())
             {
-                double dx = location.x - other.location.x;
-                double dy = location.y - other.location.y;
-
-                if(dx > borderW/2 || dx < -borderW/2)
-                    dx = -dx;
-
-                if(dy > borderH/2 || dy < -borderH/2)
-                    dy = -dy;
-
-                Vector2 dir = new Vector2(dx,dy);
-                direct.add(dir);
+                if(d != location.dist(other.location))
+                {
+                    double dx = location.x - other.location.x;
+                    double dy = location.y - other.location.y;
+                    Vector2 temp = new Vector2(other.location);
+                    if(dx > borderW/2)
+                    {
+                        temp.x += borderW;
+                    }
+                    else if(dx < -borderW/2)
+                    {
+                        temp.x -= borderW;
+                    }
+                    if(dy > borderH/2)
+                    {
+                        temp.y += borderH;
+                    }
+                    else if(dy < -borderH/2)
+                    {
+                        temp.y -= borderH;
+                    }
+                    direct.add(temp);
+                }
+                else
+                {
+                    direct.add(other.location);
+                }
                 count++;
             }
         }
         if(count > 0)
         {
             direct.div(count);
+            direct.sub(location);
             direct.norm();
-            direct.multi(maxSpeed);
-            direct.sub(velocity);
-            if(direct.length() > maxSpeed)
-            {
-                direct.norm();
-                direct.multi(maxSpeed);
-            }
         }
         return direct;
     }
@@ -199,13 +209,6 @@ public class Boid {
         {
             direct.div(count);
             direct.norm();
-            direct.multi(maxSpeed);
-            direct.sub(velocity);
-            if(direct.length() > maxSpeed)
-            {
-                direct.norm();
-                direct.multi(maxSpeed);
-            }
         }
         return direct;
     }
