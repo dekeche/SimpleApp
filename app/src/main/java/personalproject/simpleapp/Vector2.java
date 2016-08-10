@@ -107,7 +107,7 @@ public class Vector2 {
     {
         double dx = this.x - rhs.x;
         double dy = this.y - rhs.y;
-        return dx*dx+dx*dy;
+        return dx*dx+dy*dy;
     }
     public double distWrap(Vector2 rhs, double height, double width)
     {
@@ -126,6 +126,6 @@ public class Vector2 {
             dy = dy + height;
         }
 
-        return Math.sqrt(dx*dx+dx*dy);
+        return Math.sqrt(dx*dx+dy*dy);
     }
 }
