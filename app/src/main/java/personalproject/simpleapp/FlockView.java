@@ -50,7 +50,7 @@ public class FlockView extends SurfaceView implements Runnable{
         int width = displaymetrics.widthPixels;
         FlockData data = new FlockData();
         flock.setBorder(height,width,data);
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 50; i++)
         {
             flock.addBoid();
         }

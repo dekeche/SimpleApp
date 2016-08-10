@@ -20,7 +20,7 @@ public class FlockData {
         CWeight = 1.0f;
         CRange = 50;
         SWeight = 1.5f;
-        SRange = 10;
+        SRange = 50;
     }
     FlockData(float aw,float ar,float cw,float cr,float sw,float sr)
     {

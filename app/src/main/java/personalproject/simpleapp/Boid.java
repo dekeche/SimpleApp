@@ -163,14 +163,14 @@ public class Boid {
             //does this cal
             if(this != other)
             {
-                double d = location.dist(other.location);//,borderH,borderW);
-                if(d >= 0 && d < data.getSRange())
+                double d = location.distWrap(other.location,borderH,borderW);
+                if(d > 0 && d < data.getSRange())
                 {
                     //x = 27, ox = 1
                     double dx = location.x - other.location.x;
                     double dy = location.y - other.location.y;
 
-                    /*if(dx > borderW/2)
+                    if(dx > borderW/2)
                     {
                         dx -= borderW;
                     }
@@ -186,11 +186,10 @@ public class Boid {
                     else if(dy < -borderH/2)
                     {
                         dy += borderH;
-                    }*/
-
+                    }
                     Vector2 dir = new Vector2(dx,dy);
                     dir.norm();
-                    //dir.div(d);
+                    dir.multi(1-(d/data.getSRange()));
                     direct.add(dir);
                     count++;
                 }
