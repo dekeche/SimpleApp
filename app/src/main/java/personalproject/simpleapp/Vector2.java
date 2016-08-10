@@ -101,7 +101,7 @@ public class Vector2 {
     {
         double dx = this.x - rhs.x;
         double dy = this.y - rhs.y;
-        return Math.sqrt(dx*dx+dx*dy);
+        return Math.sqrt(dx*dx+dy*dy);
     }
     public double distSqr(Vector2 rhs)
     {
