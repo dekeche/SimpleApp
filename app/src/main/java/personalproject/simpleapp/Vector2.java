@@ -128,4 +128,13 @@ public class Vector2 {
 
         return Math.sqrt(dx*dx+dy*dy);
     }
+
+    public double angle()
+    {
+        return Math.atan2(y,x);
+    }
+    public double angleDeg()
+    {
+        return Math.toDegrees(angle());
+    }
 }

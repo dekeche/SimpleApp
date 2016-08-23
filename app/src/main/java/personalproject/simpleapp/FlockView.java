@@ -2,9 +2,14 @@ package personalproject.simpleapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
@@ -24,42 +29,53 @@ public class FlockView extends SurfaceView implements Runnable{
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Random random;
     SurfaceHolder surfaceHolder;
+    private Bitmap image;
 
     public FlockView(Context context) {
         super(context);
-        setup();
+        this.image = BitmapFactory.decodeResource(context.getResources(),R.drawable.triangle);
     }
 
     public FlockView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setup();
+        this.image = BitmapFactory.decodeResource(context.getResources(),R.drawable.triangle);
     }
 
     public FlockView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setup();
+        this.image = BitmapFactory.decodeResource(context.getResources(),R.drawable.triangle);
     }
-    private void setup()
+    public void setup(FlockData dataInput)
     {
+        //Drawable drawable = ResourcesCompat.getDrawable(getResources(), ResourcesCompat.getDrawable(getResources(),R.drawable.triangle,null).triangle, null);
+
         surfaceHolder = getHolder();
         setFocusable(true);
         random = new Random();
-        flock = new Flock();
+        flock = new Flock(image);
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
         int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
-        FlockData data = new FlockData();
+        FlockData data;
+        if(dataInput == null)
+        {
+           data = new FlockData();
+        }
+        else
+        {
+            data = dataInput;
+        }
         flock.setBorder(height,width,data);
         for(int i = 0; i < 50; i++)
         {
             flock.addBoid();
         }
-
     }
     public void onResumeMySurfaceView(){
-        running = true;
-        thread = new Thread(this);
-        thread.start();
+        if(!running)
+        {
+            running = true;
+        }
     }
     @Override
     public void run() {
@@ -90,5 +106,15 @@ public class FlockView extends SurfaceView implements Runnable{
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
+    }
+
+    public void onStart() {
+        running = true;
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    public void onPause() {
+        running = false;
     }
 }

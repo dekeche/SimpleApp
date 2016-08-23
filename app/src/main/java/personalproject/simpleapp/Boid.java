@@ -1,8 +1,11 @@
 package personalproject.simpleapp;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
 import android.graphics.drawable.shapes.OvalShape;
@@ -14,28 +17,33 @@ public class Boid {
     Vector2 location;
     Vector2 velocity;
     Vector2 acceleration;
+    double angle;
     double borderH;
     double borderW;
     double maxForce;
     double maxSpeed;
     FlockData data;
     Paint color;
+    Bitmap image;
+    Matrix position;
 
-    Boid(double x, double y, FlockData data)
+    Boid(double x, double y, FlockData data, Bitmap image)
     {
         borderH = y;
         borderW = x;
-        double angle = 2*Math.PI * Math.random();
+        angle = 2*Math.PI * Math.random();
         velocity = new Vector2(Math.cos(angle),Math.sin(angle));
         location = new Vector2(x/2,y/2);
         acceleration = new Vector2();
         maxSpeed = 2.0f;
         maxForce = 0.03f;
         this.data = data;
+        this.image = image;
 
         color = new Paint();
         color.setColor(Color.GREEN);
         color.setStyle(Paint.Style.STROKE);
+
         color.setStrokeWidth(3);
     }
 
@@ -48,7 +56,7 @@ public class Boid {
         coh.multi(data.getCWeight());
 
         applyForce(sep);
-        //applyForce(ali);
+        applyForce(ali);
         applyForce(coh);
     }
 
@@ -56,9 +64,9 @@ public class Boid {
     public void update(ArrayList<Boid> boids) {
         flock(boids);
 
+        Vector2 prev = new Vector2(location);
         velocity.add(acceleration);
-        if(velocity.length() > maxSpeed)
-        {
+        if(velocity.length() > maxSpeed) {
             velocity.norm();
             velocity.multi(maxSpeed);
         }
@@ -66,10 +74,27 @@ public class Boid {
         acceleration.set(0,0);
 
         borders();
+
+        prev.sub(location);
+        angle = prev.angleDeg();
+
+        createMatrix();
+    }
+
+    private void createMatrix() {
+        position = new Matrix();
+
+        position.setRotate((float)angle,image.getWidth()/2,image.getHeight()/2);
+        position.postScale(0.2f,0.2f,image.getWidth()/2,image.getHeight()/2);
+        position.postTranslate((float)location.x,(float)location.y);
     }
 
     public void render(Canvas can) {
-        can.drawCircle((float)location.x, (float)location.y,20, color);
+
+        can.drawBitmap(image,position,color);
+        //Drawable d;
+        //can.drawCircle((float)location.x, (float)location.y,20, color);
+        //can.drawBitmap(image,(float)location.x, (float)location.y, color);
     }
     private void borders(){
         if(location.x < 0)
@@ -103,13 +128,6 @@ public class Boid {
         {
             direct.div(count);
             direct.norm();
-            direct.multi(maxSpeed);
-            direct.sub(velocity);
-            if(direct.length() > maxSpeed)
-            {
-                direct.norm();
-                direct.multi(maxSpeed);
-            }
         }
         return direct;
     }

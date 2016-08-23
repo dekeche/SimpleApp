@@ -1,9 +1,11 @@
 package personalproject.simpleapp;
 
+import java.io.Serializable;
+
 /**
  * Created by Jesse on 8/5/2016.
  */
-public class FlockData {
+public class FlockData implements Serializable{
 
     private float AWeight;
     private float CWeight;
@@ -16,7 +18,7 @@ public class FlockData {
     FlockData()
     {
         AWeight = 1.0f;
-        ARange = 50;
+        ARange = 100;
         CWeight = 1.0f;
         CRange = 100;
         SWeight = 1.5f;
